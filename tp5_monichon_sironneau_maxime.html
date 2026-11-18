@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x000001fd298ec7a0&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x000001a600dfe790&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -953,6 +953,64 @@ wines_moy_large</code></pre>
 <pre class="r"><code>cor(wines$Global, wines_moy_large$tasting)</code></pre>
 <pre><code>## [1] -0.1574692</code></pre>
 </div>
+</div>
+</div>
+<div id="partie-d" class="section level1">
+<h1>Partie D</h1>
+<div id="d1" class="section level2">
+<h2>D1</h2>
+<pre class="r"><code>emp &lt;- read_csv(&quot;data/employee.csv&quot;)</code></pre>
+<pre><code>## Rows: 235 Columns: 9
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (7): First, Last, Gender, Job_Title, Country, Birth_Date, Hire_Date
+## dbl (2): Employee_ID, Salary
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>summary(emp)</code></pre>
+<pre><code>##   Employee_ID           First            Last           Gender   
+##  Min.   :120101   Length   :235   Length   :235   Length   :235  
+##  1st Qu.:120668   N.unique :204   N.unique :228   N.unique :  3  
+##  Median :120741   N.blank  :  0   N.blank  :  0   N.blank  :  0  
+##  Mean   :120688   Min.nchar:  3   Min.nchar:  2   Min.nchar:  1  
+##  3rd Qu.:120799   Max.nchar: 11   Max.nchar: 14   Max.nchar:  1  
+##  Max.   :121148                                   NAs      :  1  
+##  NAs    :1                                                       
+##      Salary           Job_Title        Country        Birth_Date 
+##  Min.   :  2401   Length   :235   Length   :235   Length   :235  
+##  1st Qu.: 27804   N.unique :124   N.unique :  4   N.unique :227  
+##  Median : 34020   N.blank  :  0   N.blank  :  0   N.blank  :  0  
+##  Mean   : 43955   Min.nchar:  7   Min.nchar:  2   Min.nchar: 10  
+##  3rd Qu.: 47253   Max.nchar: 25   Max.nchar:  2   Max.nchar: 10  
+##  Max.   :433800   NAs      :  1                                  
+##  NAs    :1                                                       
+##      Hire_Date  
+##  Length   :235  
+##  N.unique :146  
+##  N.blank  :  0  
+##  Min.nchar: 10  
+##  Max.nchar: 10  
+##  NAs      :  1  
+## </code></pre>
+<pre class="r"><code>emp</code></pre>
+<pre><code>## # A tibble: 235 × 9
+##    Employee_ID First  Last  Gender Salary Job_Title Country Birth_Date Hire_Date
+##          &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;    
+##  1      120101 Patri… Lu    M      163040 Director  AU      18/08/1976 01/07/20…
+##  2      120104 Kareen Bill… F       46230 Administ… au      11/05/1954 01/01/19…
+##  3      120105 Liz    Povey F       27110 Secretar… AU      21/12/1974 01/05/19…
+##  4      120106 John   Horn… M          NA Office A… AU      23/12/1944 01/01/19…
+##  5      120107 Sherie Shee… F       30475 Office A… AU      01/02/1978 21/01/19…
+##  6      120108 Gladys Grom… F       27660 Warehous… AU      23/02/1984 01/08/20…
+##  7      120108 Gabri… Baker F       26495 Warehous… AU      15/12/1986 01/10/20…
+##  8      120110 Dennis Entw… M       28615 Warehous… AU      20/11/1949 01/11/19…
+##  9      120111 Ubaldo Spil… M       26895 Security… AU      23/07/1949 &lt;NA&gt;     
+## 10      120112 Ellis  Glat… F       26550 &lt;NA&gt;      AU      17/02/1969 01/07/19…
+## # ℹ 225 more rows</code></pre>
+</div>
+<div id="parmis-les-problèmes-on-trouve" class="section level2">
+<h2>Parmis les problèmes on trouve :</h2>
 </div>
 </div>
 

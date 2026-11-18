@@ -304,6 +304,19 @@ wines_moy_large %>%
 cor(wines$Global, wines_moy_large$tasting)
 ```
 
+# Partie D
+## D1
+
+```{r}
+emp <- read_csv("data/employee.csv")
+summary(emp)
+emp
+```
+
+Parmis les problèmes on trouve :
+- 
+
+
 
 
 
