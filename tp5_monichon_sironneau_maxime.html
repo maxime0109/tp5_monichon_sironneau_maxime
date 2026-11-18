@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x000001a8dd5ff7b0&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x00000180053f58a0&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -598,7 +598,7 @@ p1 &lt;- read.csv(&quot;data/prix_fr.csv&quot;)
 # read.csv2 gère le &quot;;&quot;, mais il manque peut-être un argument &#39;skip&#39; ou l&#39;encodage
 p2 &lt;- read.csv2(&quot;data/prix_fr.csv&quot;)
 
-# read_csv2() gère bien les csv FR. L&#39;erreur vient probablement du manque d&#39;encodage
+# read_csv2() gère bien les csv FR, mais l&#39;erreur vient probablement du manque d&#39;encodage
 p3 &lt;- read_csv2(&quot;data/prix_fr.csv&quot;, na = &quot;n/a&quot;, skip = 1)</code></pre>
 <pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.</code></pre>
 <pre><code>## Rows: 4 Columns: 4
@@ -627,6 +627,52 @@ p3_corrige &lt;- read_csv2(&quot;data/prix_fr.csv&quot;, na = &quot;n/a&quot;, s
 ## 3 Maillot réplique  60.0    NA football
 ## 4 Chaussures trail  89       7 running 
 ## 5 Gourde isotherme  15.0    25 running</code></pre>
+</div>
+</div>
+<div id="partie-b" class="section level1">
+<h1>Partie B</h1>
+<div id="b1" class="section level2">
+<h2>B1</h2>
+<div id="a-3" class="section level3">
+<h3>a</h3>
+<p>Il y a 2 feuilles Excel (2024 et 2025) dont les tableaux commence à
+la cellule A4</p>
+</div>
+<div id="b-3" class="section level3">
+<h3>b</h3>
+<pre class="r"><code>pluie2024 &lt;- read_excel(&quot;data/pluie_mensuelle.xlsx&quot;, sheet = &quot;2024&quot;, range = &quot;A4:M8&quot;) %&gt;%
+  mutate(annee = 2024)
+
+pluie2025 &lt;- read_excel(&quot;data/pluie_mensuelle.xlsx&quot;, sheet = &quot;2025&quot;, range = &quot;A4:M8&quot;) %&gt;%
+  mutate(annee = 2025)
+
+pluie &lt;- bind_rows(pluie2024, pluie2025)</code></pre>
+</div>
+<div id="c-2" class="section level3">
+<h3>c</h3>
+<pre class="r"><code>pluie_annuelle &lt;- pluie %&gt;%
+  group_by(station, annee) %&gt;%
+  summarise(cumul = sum(c_across(janv:déc), na.rm = TRUE))</code></pre>
+<pre><code>## `summarise()` has regrouped the output.
+## ℹ Summaries were computed grouped by station and annee.
+## ℹ Output is grouped by station.
+## ℹ Use `summarise(.groups = &quot;drop_last&quot;)` to silence this message.
+## ℹ Use `summarise(.by = c(station, annee))` for per-operation grouping
+##   (`?dplyr::dplyr_by`) instead.</code></pre>
+<pre class="r"><code>pluie_annuelle</code></pre>
+<pre><code>## # A tibble: 8 × 3
+## # Groups:   station [4]
+##   station       annee cumul
+##   &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
+## 1 Besançon       2024   626
+## 2 Besançon       2025   753
+## 3 Nîmes          2024   674
+## 4 Nîmes          2025   419
+## 5 Orléans        2024   663
+## 6 Orléans        2025   863
+## 7 Saint-Étienne  2024   651
+## 8 Saint-Étienne  2025   677</code></pre>
+</div>
 </div>
 </div>
 

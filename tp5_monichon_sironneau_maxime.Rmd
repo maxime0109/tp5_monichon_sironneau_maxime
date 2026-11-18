@@ -106,9 +106,36 @@ p1 <- read.csv("data/prix_fr.csv")
 # read.csv2 gère le ";", mais il manque peut-être un argument 'skip' ou l'encodage
 p2 <- read.csv2("data/prix_fr.csv")
 
-# read_csv2() gère bien les csv FR. L'erreur vient probablement du manque d'encodage
+# read_csv2() gère bien les csv FR, mais l'erreur vient probablement du manque d'encodage
 p3 <- read_csv2("data/prix_fr.csv", na = "n/a", skip = 1)
 
 # Code corrigé :
 p3_corrige <- read_csv2("data/prix_fr.csv", na = "n/a", skip = 1, locale(encoding = "latin1"))
 p3_corrige
+```
+
+# Partie B
+## B1
+### a
+
+Il y a 2 feuilles Excel (2024 et 2025) dont les tableaux commence à la cellule A4
+
+### b
+```{r}
+pluie2024 <- read_excel("data/pluie_mensuelle.xlsx", sheet = "2024", range = "A4:M8") %>%
+  mutate(annee = 2024)
+
+pluie2025 <- read_excel("data/pluie_mensuelle.xlsx", sheet = "2025", range = "A4:M8") %>%
+  mutate(annee = 2025)
+
+pluie <- bind_rows(pluie2024, pluie2025)
+```
+
+### c
+```{r}
+pluie_annuelle <- pluie %>%
+  group_by(station, annee) %>%
+  summarise(cumul = sum(c_across(janv:déc), na.rm = TRUE))
+pluie_annuelle
+```
+
