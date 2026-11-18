@@ -266,7 +266,43 @@ amplitude_therm <- meteo_long %>%
 amplitude_therm
 ```
 
+## C3
+### a
 
+```{r}
+wines <- read_excel("data/wines.xlsx")
+
+wines_long <- wines %>%
+  pivot_longer(
+    cols = -c(Wines, Soul),
+    names_to = c("etape", "descripteur"),
+    names_pattern = "(rest|view|shaking|tasting)(.*)",
+    values_to = "note"
+  )
+wines_long
+```
+
+### b
+```{r}
+wines_moy_large <- wines_long %>%
+  group_by(Wines, Soul, etape) %>%
+  summarise(note_moyenne = mean(note, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(names_from = etape, values_from = note_moyenne) %>%
+  select(Wines, Soul, rest, view, shaking, tasting)
+wines_moy_large
+```
+
+### c
+```{r}
+wines_moy_large %>%
+  slice_max(tasting, n = 3) %>%
+  select(Wines, Soul, tasting)
+```
+
+### d
+```{r}
+cor(wines$Global, wines_moy_large$tasting)
+```
 
 
 
