@@ -18,3 +18,32 @@ all.equal(dim(ref), dim(l3)) ; all.equal(names(ref), names(l3))
 all.equal(dim(ref), dim(sn)) ; all.equal(names(ref), names(sn))
 all.equal(dim(ref), dim(dm)) ; all.equal(names(ref), names(dm))
 all.equal(dim(ref), dim(d99)) ; all.equal(names(ref), names(d99))
+```
+
+## A2
+### a
+```{r}
+sum(is.na(dm))
+sum(is.na(d99))
+identical(which(is.na(dm)), which(is.na(d99)))
+```
+
+### b
+```{r}
+library(tidyverse) 
+library(readxl)
+
+voitures_na <- dm[!complete.cases(dm), "Modele"]
+ref %>% filter(Modele %in% voitures_na)
+ref
+```
+
+### c
+```{r}
+d99_faux <- read.table("data/auto2004_don_manquan_99999.txt", header = TRUE, sep = "\t")
+d99_faux
+mean_vrai <- mean(ref$Puissance, na.rm = TRUE) 
+mean_faux <- mean(d99_faux$Puissance, na.rm = TRUE)
+erreur <- mean_faux - mean_vrai
+erreur
+```
