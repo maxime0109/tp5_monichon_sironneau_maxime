@@ -210,7 +210,6 @@ pluie_long <- pluie %>%
     names_to = "mois",
     values_to = "mm"
   )
-pluie
 pluie_long
 ```
 
@@ -247,6 +246,26 @@ diff_pluie %>%
   ungroup() %>%
   slice_max(diff, n = 1)
 ```
+
+## C2
+```{r}
+meteo_long <- meteo %>%
+  pivot_longer(
+    cols = c(temp_min, temp_max),
+    names_to = "type_mesure",
+    values_to = "temperature"
+  )
+meteo_long
+
+amplitude_therm <- meteo_long %>%
+  pivot_wider(names_from = type_mesure, values_from = temperature) %>%
+  mutate(amplitude = temp_max - temp_min) %>%
+  group_by(station) %>%
+  summarise(amp_moyenne = mean(amplitude, na.rm = TRUE))
+
+amplitude_therm
+```
+
 
 
 
