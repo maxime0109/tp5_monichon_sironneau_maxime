@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x00000180053f58a0&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x000001d5427fe880&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -672,6 +672,65 @@ pluie &lt;- bind_rows(pluie2024, pluie2025)</code></pre>
 ## 6 Orléans        2025   863
 ## 7 Saint-Étienne  2024   651
 ## 8 Saint-Étienne  2025   677</code></pre>
+</div>
+</div>
+<div id="b2" class="section level2">
+<h2>B2</h2>
+<div id="a-4" class="section level3">
+<h3>a</h3>
+<pre class="r"><code>library(haven)
+
+pays &lt;- read_sas(&quot;data/paysniv3.sas7bdat&quot;)
+dim(pays)</code></pre>
+<pre><code>## [1] 173  25</code></pre>
+<pre class="r"><code>colSums(is.na(pays))</code></pre>
+<pre><code>##   NOM POP87   NAT  MORT  ACCR  DOUB POP00 POP20 MORTI FERTI AGE15 AGE65 ESPER 
+##     0     0     0     0     0     4     0     0     0     0     0     0     0 
+##  URBA   EAU ENERG ENERT   PNB  SURF CULTU PATUR FORET  PAYS   NIV CONTI 
+##     3    90    36    35    10     1     2     2     2     0     0     0</code></pre>
+</div>
+<div id="b-4" class="section level3">
+<h3>b</h3>
+<pre class="r"><code>pays &lt;- pays %&gt;%
+  mutate(CONTI = factor(CONTI, 
+                        levels = 1:5, 
+                        labels = c(&quot;Afrique&quot;, &quot;Asie&quot;, &quot;Amériques&quot;, &quot;Europe&quot;, &quot;Océanie&quot;)))</code></pre>
+</div>
+<div id="c-3" class="section level3">
+<h3>c</h3>
+<pre class="r"><code>pays %&gt;%
+  group_by(CONTI) %&gt;%
+  summarise(
+    nb_pays = n(),
+    esp_moy = mean(ESPER, na.rm = TRUE),
+    fert_moy = mean(FERTI, na.rm = TRUE),
+    pnb_med = median(PNB, na.rm = TRUE)
+  ) %&gt;%
+  arrange(esp_moy)</code></pre>
+<pre><code>## # A tibble: 5 × 5
+##   CONTI     nb_pays esp_moy fert_moy pnb_med
+##   &lt;fct&gt;       &lt;int&gt;   &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Afrique        53    50.8     6.11     370
+## 2 Asie           44    60.8     4.88    1150
+## 3 Océanie         9    67.9     4.06    1700
+## 4 Amériques      39    68.4     3.43    1320
+## 5 Europe         28    73.5     1.87    8335</code></pre>
+</div>
+<div id="d" class="section level3">
+<h3>d</h3>
+<pre class="r"><code>pays %&gt;%
+  slice_min(ESPER, n = 5) %&gt;%
+  select(NOM, ESPER)</code></pre>
+<pre><code>## # A tibble: 7 × 2
+##   NOM          ESPER
+##   &lt;chr&gt;        &lt;dbl&gt;
+## 1 SIERRA LEONE    35
+## 2 GAMBIA          36
+## 3 AFGANISTHAN     39
+## 4 EAST TIMOR      40
+## 5 GUINEA          41
+## 6 ETHIOPIA        41
+## 7 SOMALIA         41</code></pre>
 </div>
 </div>
 </div>

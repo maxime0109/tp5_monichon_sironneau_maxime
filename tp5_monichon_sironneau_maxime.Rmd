@@ -139,3 +139,44 @@ pluie_annuelle <- pluie %>%
 pluie_annuelle
 ```
 
+## B2
+### a
+```{r}
+library(haven)
+
+pays <- read_sas("data/paysniv3.sas7bdat")
+dim(pays)
+colSums(is.na(pays))
+```
+
+### b
+```{r}
+pays <- pays %>%
+  mutate(CONTI = factor(CONTI, 
+                        levels = 1:5, 
+                        labels = c("Afrique", "Asie", "Amériques", "Europe", "Océanie")))
+
+```
+
+### c
+```{r}
+pays %>%
+  group_by(CONTI) %>%
+  summarise(
+    nb_pays = n(),
+    esp_moy = mean(ESPER, na.rm = TRUE),
+    fert_moy = mean(FERTI, na.rm = TRUE),
+    pnb_med = median(PNB, na.rm = TRUE)
+  ) %>%
+  arrange(esp_moy)
+```
+
+### d
+```{r}
+pays %>%
+  slice_min(ESPER, n = 5) %>%
+  select(NOM, ESPER)
+```
+
+
+
