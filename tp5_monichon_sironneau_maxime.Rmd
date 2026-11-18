@@ -380,6 +380,50 @@ emp_propre %>%
 min(emp_propre$age_embauche, na.rm = TRUE)
 sum(emp_propre$age_embauche < 16, na.rm = TRUE)
 ```
+Il est possible d'être employé avant 16 ans dans le cadre d'un job d'été par exemple
+
+## D4
+### a
+```{r}
+commandes <- read_csv("data/commandes.csv")
+clients <- read_csv("data/customer.csv")
+
+commandes
+clients
+
+clients_manquants <- anti_join(commandes, clients, by = "Customer_ID")
+nrow(clients_manquants) == 0
+```
+
+### b
+```{r}
+commandes_cl <- commandes %>%
+  left_join(clients, by = "Customer_ID") %>%
+  group_by(Country) %>%
+  summarise(CA = sum(Total_Retail_Price, na.rm = TRUE))
+commandes_cl
+
+
+ca_usa <- commandes_cl %>% filter(Country %in% c("US", "USA")) %>% pull(CA)
+ca_total <- sum(commandes_cl$CA, na.rm = TRUE)
+(ca_usa / ca_total) * 100
+```
+
+### c
+```{r}
+commandes_vendeur <- commandes %>% filter(Employee_ID != 99999999)
+commandes_emp <- inner_join(commandes_vendeur, emp_propre, by = "Employee_ID")
+nrow(commandes_emp)
+```
+On peut en déduire que ces deux fichiers sont liés et qu'on peut faire une jointure entre elles si on veut pousser nos études
+
+### d
+```{r}
+commandes_emp %>%
+  group_by(Employee_ID, First, Last, Job_Title) %>%
+  summarise(CA = sum(Total_Retail_Price, na.rm = TRUE), .groups="drop") %>%
+  slice_max(CA, n = 1)
+```
 
 
 
