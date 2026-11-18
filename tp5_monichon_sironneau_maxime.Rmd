@@ -198,7 +198,58 @@ saveRDS(pays, "sorties/pays.rds")
 pays_recharge <- readRDS("sorties/pays.rds")
 class(pays_recharge$CONTI)
 ```
-Dans un CSv, le facteur serait juste devenu une chaine de caractères, perdant son utilité pour trier
+Dans un CSV, le facteur serait juste devenu une chaine de caractères, perdant son utilité pour trier
+
+# Partie C
+## C1
+### a
+```{r}
+pluie_long <- pluie %>%
+  pivot_longer(
+    cols = -c(station, annee),
+    names_to = "mois",
+    values_to = "mm"
+  )
+pluie
+pluie_long
+```
+
+### b
+```{r}
+mois_niveaux <- setdiff(names(pluie), c("station", "annee"))
+
+pluie_long <- pluie_long %>%
+  mutate(mois = factor(mois, levels = mois_niveaux))
+```
+
+### c
+```{r}
+pluie_long %>%
+  filter(annee == 2025) %>%
+  group_by(station) %>%
+  slice_max(mm, n = 1, with_ties = FALSE)
+```
+
+### d
+```{r}
+diff_pluie <- pluie_long %>%
+  filter(annee %in% c(2024, 2025)) %>%
+  select(station, mois, annee, mm) %>%
+  mutate(mm = as.numeric(mm)) %>%
+  pivot_wider(
+    names_from = annee, 
+    values_from = mm, 
+    names_prefix = "an_"
+  ) %>%
+  mutate(diff = an_2025 - an_2024)
+
+diff_pluie %>%
+  ungroup() %>%
+  slice_max(diff, n = 1)
+```
+
+
+
 
 
 

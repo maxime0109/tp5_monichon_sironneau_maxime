@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x0000019bba8fc7f0&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x0000029a4ceff7b0&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -768,8 +768,94 @@ bilan_meteo_back &lt;- read_csv2(&quot;sorties/bilan_meteo.csv&quot;, na = &quot
 pays_recharge &lt;- readRDS(&quot;sorties/pays.rds&quot;)
 class(pays_recharge$CONTI)</code></pre>
 <pre><code>## [1] &quot;factor&quot;</code></pre>
-<p>Dans un CSv, le facteur serait juste devenu une chaine de caractères,
+<p>Dans un CSV, le facteur serait juste devenu une chaine de caractères,
 perdant son utilité pour trier</p>
+</div>
+</div>
+</div>
+<div id="partie-c" class="section level1">
+<h1>Partie C</h1>
+<div id="c1" class="section level2">
+<h2>C1</h2>
+<div id="a-6" class="section level3">
+<h3>a</h3>
+<pre class="r"><code>pluie_long &lt;- pluie %&gt;%
+  pivot_longer(
+    cols = -c(station, annee),
+    names_to = &quot;mois&quot;,
+    values_to = &quot;mm&quot;
+  )
+pluie</code></pre>
+<pre><code>## # A tibble: 8 × 14
+##   station       janv  févr  mars   avr   mai  juin  juil  août  sept   oct   nov
+##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Orléans         62    69    15    43    48    57    54    75    55   137    35
+## 2 Besançon        66    18    28    48    47    59    56    83    75    66    18
+## 3 Nîmes           78    78    27    26    55    67   140    40    71    36    29
+## 4 Saint-Étien…    80    52    69    58    70    17    31    58    41    59    56
+## 5 Orléans         20    29    71    96    81    99   139    71    55    87    58
+## 6 Besançon       220    34    28    57    31    45    13    46    35    45    54
+## 7 Nîmes           79     9    36    31    22    25    54    52    29    28    25
+## 8 Saint-Étien…    72    78    41    56    65    36    16    35    78    39    97
+## # ℹ 2 more variables: déc &lt;dbl&gt;, annee &lt;dbl&gt;</code></pre>
+<pre class="r"><code>pluie_long</code></pre>
+<pre><code>## # A tibble: 96 × 4
+##    station annee mois     mm
+##    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;
+##  1 Orléans  2024 janv     62
+##  2 Orléans  2024 févr     69
+##  3 Orléans  2024 mars     15
+##  4 Orléans  2024 avr      43
+##  5 Orléans  2024 mai      48
+##  6 Orléans  2024 juin     57
+##  7 Orléans  2024 juil     54
+##  8 Orléans  2024 août     75
+##  9 Orléans  2024 sept     55
+## 10 Orléans  2024 oct     137
+## # ℹ 86 more rows</code></pre>
+</div>
+<div id="b-6" class="section level3">
+<h3>b</h3>
+<pre class="r"><code>mois_niveaux &lt;- setdiff(names(pluie), c(&quot;station&quot;, &quot;annee&quot;))
+
+pluie_long &lt;- pluie_long %&gt;%
+  mutate(mois = factor(mois, levels = mois_niveaux))</code></pre>
+</div>
+<div id="c-5" class="section level3">
+<h3>c</h3>
+<pre class="r"><code>pluie_long %&gt;%
+  filter(annee == 2025) %&gt;%
+  group_by(station) %&gt;%
+  slice_max(mm, n = 1, with_ties = FALSE)</code></pre>
+<pre><code>## # A tibble: 4 × 4
+## # Groups:   station [4]
+##   station       annee mois     mm
+##   &lt;chr&gt;         &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;
+## 1 Besançon       2025 janv    220
+## 2 Nîmes          2025 janv     79
+## 3 Orléans        2025 juil    139
+## 4 Saint-Étienne  2025 nov      97</code></pre>
+</div>
+<div id="d-1" class="section level3">
+<h3>d</h3>
+<pre class="r"><code>diff_pluie &lt;- pluie_long %&gt;%
+  filter(annee %in% c(2024, 2025)) %&gt;%
+  select(station, mois, annee, mm) %&gt;%
+  mutate(mm = as.numeric(mm)) %&gt;%
+  pivot_wider(
+    names_from = annee, 
+    values_from = mm, 
+    names_prefix = &quot;an_&quot;
+  ) %&gt;%
+  mutate(diff = an_2025 - an_2024)
+
+diff_pluie %&gt;%
+  ungroup() %&gt;%
+  slice_max(diff, n = 1)</code></pre>
+<pre><code>## # A tibble: 1 × 5
+##   station  mois  an_2024 an_2025  diff
+##   &lt;chr&gt;    &lt;fct&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1 Besançon janv       66     220   154</code></pre>
 </div>
 </div>
 </div>
