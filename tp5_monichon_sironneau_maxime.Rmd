@@ -1,0 +1,20 @@
+---
+title: "tp5_monichon_sironneau_maxime"
+output: html_document
+---
+
+# Partie A
+## A1
+
+```{r}
+ref <- read.table("data/auto2004_original.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+l3  <- read.table("data/auto2004_original_ligne3.txt", header = TRUE, sep = "\t", skip = 3, stringsAsFactors = FALSE)
+sn  <- read.table("data/auto2004_sans_nom.txt", header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+colnames(sn) <- colnames(ref)
+dm  <- read.table("data/auto2004_don_manquante.txt", header = TRUE, sep = "\t", na.strings = c("", "NA"), stringsAsFactors = FALSE)
+d99 <- read.table("data/auto2004_don_manquan_99999.txt", header = TRUE, sep = "\t", na.strings = "99999", stringsAsFactors = FALSE)
+
+all.equal(dim(ref), dim(l3)) ; all.equal(names(ref), names(l3))
+all.equal(dim(ref), dim(sn)) ; all.equal(names(ref), names(sn))
+all.equal(dim(ref), dim(dm)) ; all.equal(names(ref), names(dm))
+all.equal(dim(ref), dim(d99)) ; all.equal(names(ref), names(d99))
