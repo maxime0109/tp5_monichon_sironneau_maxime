@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x0000025487dff790&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x000001a8dd5ff7b0&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -589,6 +589,44 @@ bilan_meteo</code></pre>
 ## 3 Orléans       2026-01-15     -5.4
 ## 4 Saint-Étienne 2026-01-02     -5.6</code></pre>
 </div>
+</div>
+<div id="a5" class="section level2">
+<h2>A5</h2>
+<pre class="r"><code># read.csv utilise &quot;,&quot; par défaut mais pour un fichier FR (csv2), il faut le séparateur &quot;;&quot;
+p1 &lt;- read.csv(&quot;data/prix_fr.csv&quot;)
+
+# read.csv2 gère le &quot;;&quot;, mais il manque peut-être un argument &#39;skip&#39; ou l&#39;encodage
+p2 &lt;- read.csv2(&quot;data/prix_fr.csv&quot;)
+
+# read_csv2() gère bien les csv FR. L&#39;erreur vient probablement du manque d&#39;encodage
+p3 &lt;- read_csv2(&quot;data/prix_fr.csv&quot;, na = &quot;n/a&quot;, skip = 1)</code></pre>
+<pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.</code></pre>
+<pre><code>## Rows: 4 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;;&quot;
+## chr (2): Raquette junior, tennis
+## dbl (2): 24,90, 12
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># Code corrigé :
+p3_corrige &lt;- read_csv2(&quot;data/prix_fr.csv&quot;, na = &quot;n/a&quot;, skip = 1, locale(encoding = &quot;latin1&quot;))</code></pre>
+<pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.
+## Rows: 5 Columns: 4── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;;&quot;
+## chr (2): X1, X4
+## dbl (2): X2, X3
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>p3_corrige</code></pre>
+<pre><code>## # A tibble: 5 × 4
+##   X1                  X2    X3 X4      
+##   &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   
+## 1 Raquette junior   24.9    12 tennis  
+## 2 Ballon taille 5   18.5    40 football
+## 3 Maillot réplique  60.0    NA football
+## 4 Chaussures trail  89       7 running 
+## 5 Gourde isotherme  15.0    25 running</code></pre>
 </div>
 </div>
 

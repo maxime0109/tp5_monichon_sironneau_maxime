@@ -97,3 +97,18 @@ meteo %>%
   slice_min(temp_min, n = 1, with_ties = FALSE) %>%
   select(station, date, temp_min)
 ```
+
+## A5
+```{r}
+# read.csv utilise "," par défaut mais pour un fichier FR (csv2), il faut le séparateur ";"
+p1 <- read.csv("data/prix_fr.csv")
+
+# read.csv2 gère le ";", mais il manque peut-être un argument 'skip' ou l'encodage
+p2 <- read.csv2("data/prix_fr.csv")
+
+# read_csv2() gère bien les csv FR. L'erreur vient probablement du manque d'encodage
+p3 <- read_csv2("data/prix_fr.csv", na = "n/a", skip = 1)
+
+# Code corrigé :
+p3_corrige <- read_csv2("data/prix_fr.csv", na = "n/a", skip = 1, locale(encoding = "latin1"))
+p3_corrige
