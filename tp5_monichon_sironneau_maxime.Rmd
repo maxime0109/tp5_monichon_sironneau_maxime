@@ -68,3 +68,32 @@ colSums(is.na(meteo))
 range(meteo$date)
 unique(meteo$station)
 ```
+
+## A4
+### a
+```{r}
+bilan_meteo <- meteo %>%
+  group_by(station) %>%
+  summarise(
+    temp_min_moy = mean(temp_min, na.rm = TRUE),
+    temp_max_moy = mean(temp_max, na.rm = TRUE),
+    cumul_pluie = sum(pluie_mm, na.rm = TRUE),
+    jours_gel = sum(temp_min < 0, na.rm = TRUE),
+    jours_pluie = sum(pluie_mm > 0, na.rm = TRUE)
+  )
+bilan_meteo
+```
+
+### b
+```{r}
+bilan_meteo %>% slice_max(jours_gel, n = 1)
+bilan_meteo %>% slice_max(cumul_pluie, n = 1)
+```
+
+### c
+```{r}
+meteo %>%
+  group_by(station) %>%
+  slice_min(temp_min, n = 1, with_ties = FALSE) %>%
+  select(station, date, temp_min)
+```
