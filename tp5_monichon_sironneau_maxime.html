@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x00000198028ec840&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x0000011db1dfe960&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -1010,7 +1010,8 @@ wines_moy_large</code></pre>
 ## # ℹ 225 more rows</code></pre>
 <p>Parmis les problèmes on trouve : - Plusieurs valeurs NA dont un qui
 se trouve dans la colonne identifiant l’employé - Des valeurs mixtes
-pour Country (un coup minuscule, un coup majuscule)</p>
+pour Country (un coup minuscule, un coup majuscule) - Plus de 2 sexes -
+Des salaires trop faibles</p>
 </div>
 <div id="d2" class="section level2">
 <h2>D2</h2>
@@ -1080,6 +1081,64 @@ summary(emp_propre)</code></pre>
 ## 10      120112 Ellis Glat… F       26550 &lt;NA&gt;      AU      1969-02-17 1990-07-01
 ## # ℹ 225 more rows
 ## # ℹ 2 more variables: age_embauche &lt;dbl&gt;, anciennete &lt;dbl&gt;</code></pre>
+</div>
+<div id="d3" class="section level2">
+<h2>D3</h2>
+<div id="a-8" class="section level3">
+<h3>a</h3>
+<pre class="r"><code>emp_propre %&gt;%
+  group_by(Country, Gender) %&gt;%
+  summarise(med_salary = median(Salary, na.rm = TRUE), .groups=&quot;drop&quot;)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   Country Gender med_salary
+##   &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;
+## 1 AU      F           27110
+## 2 AU      M           28090
+## 3 AU      &lt;NA&gt;        31285
+## 4 US      F           36315
+## 5 US      M           35870
+## 6 US      &lt;NA&gt;        33950</code></pre>
+</div>
+<div id="b-8" class="section level3">
+<h3>b</h3>
+<pre class="r"><code>emp_propre %&gt;%
+  group_by(Job_Title) %&gt;%
+  summarise(nb = n(), salaire_moyen = mean(Salary, na.rm = TRUE)) %&gt;%
+  slice_max(nb, n = 5)</code></pre>
+<pre><code>## # A tibble: 8 × 3
+##   Job_Title                 nb salaire_moyen
+##   &lt;chr&gt;                  &lt;int&gt;         &lt;dbl&gt;
+## 1 Trainee                   18        25477.
+## 2 Warehouse Assistant I     10        26262.
+## 3 Purchasing Agent I         6        30977.
+## 4 Accountant I               5        31563 
+## 5 Accountant II              5        37284 
+## 6 Marketing Assistant II     5        29544 
+## 7 Purchasing Agent II        5        34488 
+## 8 Shipping Manager           5        57477</code></pre>
+</div>
+<div id="c-7" class="section level3">
+<h3>c</h3>
+<pre class="r"><code>emp_propre %&gt;%
+  mutate(decennie_embauche = floor(year(Hire_Date) / 10) * 10) %&gt;%
+  group_by(decennie_embauche) %&gt;%
+  summarise(age_moy_emb = mean(age_embauche, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   decennie_embauche age_moy_emb
+##               &lt;dbl&gt;       &lt;dbl&gt;
+## 1              1970        26.6
+## 2              1980        23.9
+## 3              1990        24.3
+## 4              2000        24.1
+## 5                NA       NaN</code></pre>
+</div>
+<div id="d-3" class="section level3">
+<h3>d</h3>
+<pre class="r"><code>min(emp_propre$age_embauche, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 15</code></pre>
+<pre class="r"><code>sum(emp_propre$age_embauche &lt; 16, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 1</code></pre>
+</div>
 </div>
 </div>
 

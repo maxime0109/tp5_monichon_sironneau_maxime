@@ -316,6 +316,8 @@ emp
 Parmis les problèmes on trouve :
 - Plusieurs valeurs NA dont un qui se trouve dans la colonne identifiant l'employé
 - Des valeurs mixtes pour Country (un coup minuscule, un coup majuscule)
+- Plus de 2 sexes
+- Des salaires trop faibles
 
 ## D2
 
@@ -348,6 +350,37 @@ emp_propre <- emp %>%
 summary(emp_propre)
 emp_propre
 ```
+
+## D3
+### a
+```{r}
+emp_propre %>%
+  group_by(Country, Gender) %>%
+  summarise(med_salary = median(Salary, na.rm = TRUE), .groups="drop")
+```
+
+### b
+```{r}
+emp_propre %>%
+  group_by(Job_Title) %>%
+  summarise(nb = n(), salaire_moyen = mean(Salary, na.rm = TRUE)) %>%
+  slice_max(nb, n = 5)
+```
+
+### c
+```{r}
+emp_propre %>%
+  mutate(decennie_embauche = floor(year(Hire_Date) / 10) * 10) %>%
+  group_by(decennie_embauche) %>%
+  summarise(age_moy_emb = mean(age_embauche, na.rm = TRUE))
+```
+
+### d
+```{r}
+min(emp_propre$age_embauche, na.rm = TRUE)
+sum(emp_propre$age_embauche < 16, na.rm = TRUE)
+```
+
 
 
 
