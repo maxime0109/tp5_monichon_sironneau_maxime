@@ -314,7 +314,42 @@ emp
 ```
 
 Parmis les problèmes on trouve :
-- 
+- Plusieurs valeurs NA dont un qui se trouve dans la colonne identifiant l'employé
+- Des valeurs mixtes pour Country (un coup minuscule, un coup majuscule)
+
+## D2
+
+```{r}
+emp_propre <- emp %>%
+  mutate(
+    # Pays en majuscules
+    Country = toupper(Country),
+    
+    # Genre NA pour tout autre que F et M
+    Gender = if_else(Gender %in% c("F", "M"), Gender, NA_character_),
+    
+    # Correction salaire
+    Salary = if_else(Salary < 10000, Salary * 10, Salary),
+    
+    # Conversion dates (adapter le format si nécessaire %m/%d/%Y)
+    Birth_Date = dmy(Birth_Date),
+    Hire_Date = dmy(Hire_Date),
+    
+    # Embauche avant 1974 -> NA
+    Hire_Date = if_else(year(Hire_Date) < 1974, as.Date(NA), Hire_Date),
+    
+    # Identifiant manquant
+    Employee_ID = if_else(is.na(Employee_ID), max(Employee_ID, na.rm = TRUE) + 1, Employee_ID),
+    
+    # Nouvelles colonnes (années révolues au 31/12/2007 pour anciennete)
+    age_embauche = year(Hire_Date) - year(Birth_Date),
+    anciennete = as.numeric(difftime(as.Date("2007-12-31"), Hire_Date, units = "days")) / 365.25
+  )
+summary(emp_propre)
+emp_propre
+```
+
+
 
 
 
