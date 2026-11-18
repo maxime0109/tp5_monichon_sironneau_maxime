@@ -35,7 +35,6 @@ library(readxl)
 
 voitures_na <- dm[!complete.cases(dm), "Modele"]
 ref %>% filter(Modele %in% voitures_na)
-ref
 ```
 
 ### c
@@ -46,4 +45,26 @@ mean_vrai <- mean(ref$Puissance, na.rm = TRUE)
 mean_faux <- mean(d99_faux$Puissance, na.rm = TRUE)
 erreur <- mean_faux - mean_vrai
 erreur
+```
+
+## A3
+### a
+```{r}
+meteo <- read_delim(
+  "data/stations_janvier2026.csv",
+  delim = ";", 
+  locale = locale(encoding = "latin1", decimal_mark = ","),
+  na = c("", "NA", "-99", "n/a"),
+  skip = 2,
+  col_types = cols(date = col_date(format = "%d/%m/%Y"))
+)
+```
+
+### b
+```{r}
+dim(meteo)
+str(meteo)
+colSums(is.na(meteo))
+range(meteo$date)
+unique(meteo$station)
 ```
