@@ -529,7 +529,7 @@ erreur</code></pre>
 ##   ..   pluie_mm = col_double(),
 ##   ..   vent_kmh = col_character()
 ##   .. )
-##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x000001d5427fe880&gt;</code></pre>
+##  - attr(*, &quot;problems&quot;)=&lt;pointer: 0x0000019bba8fc7f0&gt;</code></pre>
 <pre class="r"><code>colSums(is.na(meteo))</code></pre>
 <pre><code>##  station     date temp_min temp_max pluie_mm vent_kmh 
 ##        0        0        0        6        0        0</code></pre>
@@ -731,6 +731,45 @@ dim(pays)</code></pre>
 ## 5 GUINEA          41
 ## 6 ETHIOPIA        41
 ## 7 SOMALIA         41</code></pre>
+</div>
+</div>
+<div id="b3" class="section level2">
+<h2>B3</h2>
+<div id="a-5" class="section level3">
+<h3>a</h3>
+<pre class="r"><code>library(writexl)
+write_excel_csv2(bilan_meteo, &quot;sorties/bilan_meteo.csv&quot;)
+bilan_meteo_back &lt;- read_csv2(&quot;sorties/bilan_meteo.csv&quot;, na = &quot;n/a&quot;, skip = 1, locale(encoding = &quot;latin1&quot;))</code></pre>
+<pre><code>## ℹ Using &quot;&#39;,&#39;&quot; as decimal and &quot;&#39;.&#39;&quot; as grouping mark. Use `read_delim()` for more control.</code></pre>
+<pre><code>## Rows: 4 Columns: 6
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;;&quot;
+## chr (1): X1
+## dbl (5): X2, X3, X4, X5, X6
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>bilan_meteo_back</code></pre>
+<pre><code>## # A tibble: 4 × 6
+##   X1                X2    X3    X4    X5    X6
+##   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Besançon      -2.32   3.91  69.6    28    19
+## 2 Nîmes          5.01  11.0   99       0    15
+## 3 Orléans        0.774  7.07  50.8    11    11
+## 4 Saint-Étienne -1.07   5.26  76.1    20    13</code></pre>
+</div>
+<div id="b-5" class="section level3">
+<h3>b</h3>
+<pre class="r"><code>write_xlsx(list(pluie = pluie, bilan = bilan_meteo), &quot;sorties/donnees_tp5.xlsx&quot;)</code></pre>
+</div>
+<div id="c-4" class="section level3">
+<h3>c</h3>
+<pre class="r"><code>saveRDS(pays, &quot;sorties/pays.rds&quot;)
+pays_recharge &lt;- readRDS(&quot;sorties/pays.rds&quot;)
+class(pays_recharge$CONTI)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<p>Dans un CSv, le facteur serait juste devenu une chaine de caractères,
+perdant son utilité pour trier</p>
 </div>
 </div>
 </div>

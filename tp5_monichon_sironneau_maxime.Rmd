@@ -178,5 +178,27 @@ pays %>%
   select(NOM, ESPER)
 ```
 
+## B3
+### a
+```{r}
+library(writexl)
+write_excel_csv2(bilan_meteo, "sorties/bilan_meteo.csv")
+bilan_meteo_back <- read_csv2("sorties/bilan_meteo.csv", na = "n/a", skip = 1, locale(encoding = "latin1"))
+bilan_meteo_back
+```
+
+### b
+```{r}
+write_xlsx(list(pluie = pluie, bilan = bilan_meteo), "sorties/donnees_tp5.xlsx")
+```
+
+### c
+```{r}
+saveRDS(pays, "sorties/pays.rds")
+pays_recharge <- readRDS("sorties/pays.rds")
+class(pays_recharge$CONTI)
+```
+Dans un CSv, le facteur serait juste devenu une chaine de caractères, perdant son utilité pour trier
+
 
 
